@@ -1,317 +1,223 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<!-- Mirrored from preview.colorlib.com/theme/studio/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 27 Jan 2023 21:11:08 GMT -->
+<html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="description" content="">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workflow - Registro de Tickets de Gasto</title>
+    <style>
+        :root {
+            --primary-color: #1f4e79;
+            --primary-light: #ecf2f7;
+            --accent-color: #2e75b6;
+            --text-color: #333333;
+            --border-color: #d9d9d9;
+            --bg-page: #f5f7fa;
+            --white: #ffffff;
+        }
 
-
-<title>2ASC Administración</title>
-
-<link rel="icon" href="img/core-img/favicon.ico">
-
-<link rel="stylesheet" href="css/core-style.css">
-<link rel="stylesheet" href="style.css">
-
-<link href="css/responsive.css" rel="stylesheet">
-<script nonce="bca4447a-c654-4510-9a69-54feaf7fd34e">(function(w,d){!function(f,g,h,i){f[h]=f[h]||{};f[h].executed=[];f.zaraz={deferred:[],listeners:[]};f.zaraz.q=[];f.zaraz._f=function(j){return function(){var k=Array.prototype.slice.call(arguments);f.zaraz.q.push({m:j,a:k})}};for(const l of["track","set","debug"])f.zaraz[l]=f.zaraz._f(l);f.zaraz.init=()=>{var m=g.getElementsByTagName(i)[0],n=g.createElement(i),o=g.getElementsByTagName("title")[0];o&&(f[h].t=g.getElementsByTagName("title")[0].text);f[h].x=Math.random();f[h].w=f.screen.width;f[h].h=f.screen.height;f[h].j=f.innerHeight;f[h].e=f.innerWidth;f[h].l=f.location.href;f[h].r=g.referrer;f[h].k=f.screen.colorDepth;f[h].n=g.characterSet;f[h].o=(new Date).getTimezoneOffset();if(f.dataLayer)for(const s of Object.entries(Object.entries(dataLayer).reduce(((t,u)=>({...t[1],...u[1]})))))zaraz.set(s[0],s[1],{scope:"page"});f[h].q=[];for(;f.zaraz.q.length;){const v=f.zaraz.q.shift();f[h].q.push(v)}n.defer=!0;for(const w of[localStorage,sessionStorage])Object.keys(w||{}).filter((y=>y.startsWith("_zaraz_"))).forEach((x=>{try{f[h]["z_"+x.slice(7)]=JSON.parse(w.getItem(x))}catch{f[h]["z_"+x.slice(7)]=w.getItem(x)}}));n.referrerPolicy="origin";n.src="../../cdn-cgi/zaraz/sd0d9.js?z="+btoa(encodeURIComponent(JSON.stringify(f[h])));m.parentNode.insertBefore(n,m)};["complete","interactive"].includes(g.readyState)?zaraz.init():f.addEventListener("DOMContentLoaded",zaraz.init)}(w,d,"zarazData","script");})(window,document);</script></head>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-page); color: var(--text-color); padding: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; background-color: var(--white); padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); }
+        header { border-bottom: 2px solid var(--primary-light); padding-bottom: 15px; margin-bottom: 25px; }
+        h1 { color: var(--primary-color); font-size: 24px; }
+        h2 { color: var(--accent-color); font-size: 16px; margin-top: 20px; margin-bottom: 15px; border-left: 4px solid var(--accent-color); padding-left: 10px; text-transform: uppercase; }
+        .form-section { background-color: #fcfcfc; border: 1px solid var(--border-color); border-radius: 6px; padding: 20px; margin-bottom: 25px; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        label { font-size: 13px; font-weight: 600; color: #4a5568; margin-bottom: 6px; }
+        input, select, textarea { padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 14px; width: 100%; }
+        input[readonly] { background-color: #f3f4f6; color: #6b7280; cursor: not-allowed; }
+        .dist-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .dist-table th, .dist-table td { border: 1px solid var(--border-color); padding: 12px; text-align: center; }
+        .dist-table th { background-color: var(--primary-light); color: var(--primary-color); font-size: 13px; }
+        .dist-table td input { text-align: right; }
+        .total-row { background-color: #f9fafb; font-weight: bold; }
+        .alert-error { color: #dc2626; font-size: 12px; margin-top: 5px; display: none; }
+        .actions { display: flex; justify-content: flex-end; gap: 15px; margin-top: 30px; }
+        button { padding: 12px 24px; font-size: 14px; font-weight: 600; border-radius: 4px; cursor: pointer; border: none; }
+        .btn-secondary { background-color: #e5e7eb; color: #4b5563; }
+        .btn-primary { background-color: var(--primary-color); color: var(--white); }
+        .notification { display: none; background-color: #def7ec; border: 1px solid #b3f5d4; color: #03543f; padding: 15px; border-radius: 6px; margin-bottom: 20px; font-weight: 500; }
+    </style>
+</head>
 <body>
 
-<div id="preloader">
-<div class="showbox">
-<div class="loader">
-<svg class="circular" viewBox="25 25 50 50">
-<circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
-</svg>
-</div>
-</div>
-<div class="questions-area text-center">
-<p>Did you know?</p>
-<ul>
-<li>The largest photography competition is 353,768 entries.</li>
-<li>Photography is the toughest profession in the world.</li>
-<li>The world’s largest photo album by dimensions was 13 ft 11.5 in x 17 ft.</li>
-<li>The world’s largest photo mosaic featured 176,175 pictures.</li>
-<li>The world’s largest camera lens was a 5200mm lens attached to a canon.</li>
-</ul>
-</div>
+<div class="container">
+    <header>
+        <h1>📋 Formulario de Solicitud de Ticket (Workflow)</h1>
+    </header>
+
+    <div id="successNotification" class="notification">
+        ✓ El ticket ha sido registrado y enviado al flujo de aprobación correctamente.
+    </div>
+
+    <form id="ticketForm" onsubmit="handleFormSubmit(event)">
+        
+        <h2>Información General</h2>
+        <div class="form-section">
+            <div class="grid-container">
+                <div class="form-group">
+                    <label for="bc">BC</label>
+                    <input type="text" id="bc" required placeholder="Ej. BC-4000">
+                </div>
+                <div class="form-group">
+                    <label for="fechaEjecucion">FECHA DE EJECUCIÓN</label>
+                    <input type="date" id="fechaEjecucion" required>
+                </div>
+                <div class="form-group">
+                    <label for="codigoTicket">CÓDIGO TICKET</label>
+                    <select id="codigoTicket" required>
+                        <option value="" disabled selected>Seleccione...</option>
+                        <option value="RQ">RQ (Requerimiento)</option>
+                        <option value="GP">GP (Gestión de Proyecto)</option>
+                        <option value="PE">PE (Pedido Externo)</option>
+                        <option value="SCA">SCA (Solicitud de Cambio)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tipoGasto">TIPO DE GASTO</label>
+                    <select id="tipoGasto" required>
+                        <option value="" disabled selected>Seleccione...</option>
+                        <option value="OPEX">OPEX</option>
+                        <option value="CAPEX">CAPEX</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <h2>Detalles y Trazabilidad</h2>
+        <div class="form-section">
+            <div class="grid-container">
+                <div class="form-group">
+                    <label for="epica">ÉPICA</label>
+                    <input type="text" id="epica" placeholder="Ej. EPI-99">
+                </div>
+                <div class="form-group">
+                    <label for="ticketCanvia">TICKET CANVIA</label>
+                    <input type="text" id="ticketCanvia" placeholder="Ej. TK-12345">
+                </div>
+                <div class="form-group">
+                    <label for="importe">IMPORTE TOTAL (S/)</label>
+                    <input type="number" id="importe" step="0.01" min="0.01" required placeholder="0.00" oninput="calcularDistribucion()">
+                </div>
+                <div class="form-group full-width">
+                    <label for="descripcion">DESCRIPCIÓN DEL SERVICIO</label>
+                    <textarea id="descripcion" rows="3" required placeholder="Detalle el alcance del servicio..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <h2>Estructura de Costos y Órdenes de Inversión (OI)</h2>
+        <div class="form-section" style="overflow-x: auto;">
+            <table class="dist-table">
+                <thead>
+                    <tr>
+                        <th>Línea de Producto</th>
+                        <th>Orden de Inversión (OI)</th>
+                        <th>Distribución (%)</th>
+                        <th>Monto Calculado (S/.)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-weight:600;">LPG</td>
+                        <td><input type="text" id="oiLpg" placeholder="OI LPG"></td>
+                        <td><input type="number" id="lpgPorcentaje" step="0.01" min="0" max="100" value="0" oninput="calcularDistribucion()"></td>
+                        <td><input type="text" id="lpgMonto" readonly value="0.00"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:600;">LPV</td>
+                        <td><input type="text" id="oiLpv" placeholder="OI LPV"></td>
+                        <td><input type="number" id="lpvPorcentaje" step="0.01" min="0" max="100" value="0" oninput="calcularDistribucion()"></td>
+                        <td><input type="text" id="lpvMonto" readonly value="0.00"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:600;">LPE</td>
+                        <td><input type="text" id="oiLpe" placeholder="OI LPE"></td>
+                        <td><input type="number" id="lpePorcentaje" step="0.01" min="0" max="100" value="0" oninput="calcularDistribucion()"></td>
+                        <td><input type="text" id="lpeMonto" readonly value="0.00"></td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="2" style="text-align: right;">Total Validado:</td>
+                        <td id="totalPorcentajeCell">0%</td>
+                        <td id="totalMontoCell">S/. 0.00</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="errorDistribucion" class="alert-error">
+                ⚠️ La suma de los porcentajes de LPG, LPV y LPE debe ser exactamente igual a 100%.
+            </div>
+        </div>
+
+        <div class="actions">
+            <button type="button" class="btn-secondary" onclick="limpiarFormulario()">Limpiar</button>
+            <button type="submit" class="btn-primary">Enviar a Aprobación</button>
+        </div>
+    </form>
 </div>
 
-<div class="gradient-background-overlay"></div>
-
-<header class="header-area">
-<div class="container-fluid h-100">
-<div class="row h-100 align-items-center">
-<div class="col-12 h-100">
-<div class="main-menu h-100">
-<nav class="navbar h-100 navbar-expand-lg">
-
-<a class="navbar-brand" href="index-2.html"><img src="img/core-img/logo.png" alt="Logo"></a>
-<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#studioMenu" aria-controls="studioMenu" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i> Menu</button>
-<div class="collapse navbar-collapse" id="studioMenu">
-
-<ul class="navbar-nav ml-auto">
-<li class="nav-item active">
-<a class="nav-link" href="index-2.html">Home <span class="sr-only">(current)</span></a>
-</li>
-<li class="nav-item dropdown">
-<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pages</a>
-<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-<a class="dropdown-item" href="index-2.html">Home</a>
-<a class="dropdown-item" href="about-me.html">About</a>
-<a class="dropdown-item" href="portfolio.html">Portfolio</a>
-<a class="dropdown-item" href="blog.html">Blog</a>
-<a class="dropdown-item" href="contact.html">Contact</a>
-<a class="dropdown-item" href="elements.html">Elements</a>
-</div>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="about-me.html">About</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="portfolio.html">Portfolio</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="blog.html">Blog</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="contact.html">contact</a>
-</li>
-</ul>
-
-<div class="header-search-form ml-auto">
-<form action="#">
-<input type="search" class="form-control" placeholder="Input your keyword then press enter..." id="search" name="search">
-<input class="d-none" type="submit" value="submit">
-</form>
-</div>
-
-<div id="searchbtn">
-<img src="img/core-img/search.png" alt="">
-</div>
-</div>
-</nav>
-</div>
-</div>
-</div>
-</div>
-</header>
-
-
-<div class="social-sidebar-area bg-white">
-
-<div class="social-info-area">
-<a href="#" data-toggle="tooltip" data-placement="right" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i> <span>Facebook</span></a>
-<a href="#" data-toggle="tooltip" data-placement="right" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i> <span>Twitter</span></a>
-<a href="#" data-toggle="tooltip" data-placement="right" title="Pinterest"><i class="fa fa-pinterest" aria-hidden="true"></i> <span>Pinterest</span></a>
-<a href="#" data-toggle="tooltip" data-placement="right" title="Behance"><i class="fa fa-behance" aria-hidden="true"></i> <span>Behance</span></a>
-</div>
-
-<div class="message-box">
-<a href="#" data-toggle="modal" data-target=".contact-modal-lg"><img src="img/core-img/envelope.png" alt=""></a>
-</div>
-</div>
-
-
-<section class="welcome-area">
-<div class="carousel h-100 slide" data-ride="carousel" id="welcomeSlider">
-
-<div class="carousel-inner h-100">
-<div class="carousel-item h-100 bg-img active" style="background-image: url(img/bg-img/1.jpg);">
-<div class="carousel-content h-100">
-<div class="slide-text">
-<span>01.</span>
-<h2> Believe you can fly</h2>
-</div>
-</div>
-</div>
-<div class="carousel-item h-100 bg-img" style="background-image: url(img/bg-img/2.jpg);">
-<div class="carousel-content h-100">
-<div class="slide-text">
-<span>02.</span>
-<h2> Believe you can fly</h2>
-</div>
-</div>
-</div>
-<div class="carousel-item h-100 bg-img" style="background-image: url(img/bg-img/3.jpg);">
-<div class="carousel-content h-100">
-<div class="slide-text">
-<span>03.</span>
-<h2> Believe you can fly</h2>
-</div>
-</div>
-</div>
-<div class="carousel-item h-100 bg-img" style="background-image: url(img/bg-img/4.jpg);">
-<div class="carousel-content h-100">
-<div class="slide-text">
-<span>04.</span>
-<h2> Believe you can fly</h2>
-</div>
-</div>
-</div>
-<div class="carousel-item h-100 bg-img" style="background-image: url(img/bg-img/5.jpg);">
-<div class="carousel-content h-100">
-<div class="slide-text">
-<span>05.</span>
-<h2> Believe you can fly</h2>
-</div>
-</div>
-</div>
-<div class="carousel-item h-100 bg-img" style="background-image: url(img/bg-img/6.jpg);">
-<div class="carousel-content h-100">
-<div class="slide-text">
-<span>06.</span>
-<h2> Believe you can fly</h2>
-</div>
-</div>
-</div>
-<div class="carousel-item h-100 bg-img" style="background-image: url(img/bg-img/7.jpg);">
-<div class="carousel-content h-100">
-<div class="slide-text">
-<span>07.</span>
-<h2> Believe you can fly</h2>
-</div>
-</div>
-</div>
-<div class="carousel-item h-100 bg-img" style="background-image: url(img/bg-img/8.jpg);">
-<div class="carousel-content h-100">
-<div class="slide-text">
-<span>08.</span>
-<h2> Believe you can fly</h2>
-</div>
-</div>
-</div>
-<div class="carousel-item h-100 bg-img" style="background-image: url(img/bg-img/9.jpg);">
-<div class="carousel-content h-100">
-<div class="slide-text">
-<span>09.</span>
-<h2> Believe you can fly</h2>
-</div>
-</div>
-</div>
-<div class="carousel-item h-100 bg-img" style="background-image: url(img/bg-img/10.jpg);">
-<div class="carousel-content h-100">
-<div class="slide-text">
-<span>10.</span>
-<h2> Believe you can fly</h2>
-</div>
-</div>
-</div>
-<div class="carousel-item h-100 bg-img" style="background-image: url(img/bg-img/11.jpg);">
-<div class="carousel-content h-100">
-<div class="slide-text">
-<span>11.</span>
-<h2> Believe you can fly</h2>
-</div>
-</div>
-</div>
-<div class="carousel-item h-100 bg-img" style="background-image: url(img/bg-img/12.jpg);">
-<div class="carousel-content h-100">
-<div class="slide-text">
-<span>12.</span>
-<h2> Believe you can fly</h2>
-</div>
-</div>
-</div>
-<div class="carousel-item h-100 bg-img" style="background-image: url(img/bg-img/13.jpg);">
-<div class="carousel-content h-100">
-<div class="slide-text">
-<span>13.</span>
-<h2> Believe you can fly</h2>
-</div>
-</div>
-</div>
-</div>
-
-<ol class="carousel-indicators">
-<li data-target="#welcomeSlider" data-slide-to="0" class="active bg-img" style="background-image: url(img/bg-img/1.jpg);"></li>
-<li data-target="#welcomeSlider" data-slide-to="1" class="bg-img" style="background-image: url(img/bg-img/2.jpg);"></li>
-<li data-target="#welcomeSlider" data-slide-to="2" class="bg-img" style="background-image: url(img/bg-img/3.jpg);"></li>
-<li data-target="#welcomeSlider" data-slide-to="3" class="bg-img" style="background-image: url(img/bg-img/4.jpg);"></li>
-<li data-target="#welcomeSlider" data-slide-to="4" class="bg-img" style="background-image: url(img/bg-img/5.jpg);"></li>
-<li data-target="#welcomeSlider" data-slide-to="5" class="bg-img" style="background-image: url(img/bg-img/6.jpg);"></li>
-<li data-target="#welcomeSlider" data-slide-to="6" class="bg-img" style="background-image: url(img/bg-img/7.jpg);"></li>
-<li data-target="#welcomeSlider" data-slide-to="7" class="bg-img" style="background-image: url(img/bg-img/8.jpg);"></li>
-<li data-target="#welcomeSlider" data-slide-to="8" class="bg-img" style="background-image: url(img/bg-img/9.jpg);"></li>
-<li data-target="#welcomeSlider" data-slide-to="9" class="bg-img" style="background-image: url(img/bg-img/10.jpg);"></li>
-<li data-target="#welcomeSlider" data-slide-to="10" class="bg-img" style="background-image: url(img/bg-img/11.jpg);"></li>
-<li data-target="#welcomeSlider" data-slide-to="11" class="bg-img" style="background-image: url(img/bg-img/12.jpg);"></li>
-<li data-target="#welcomeSlider" data-slide-to="12" class="bg-img" style="background-image: url(img/bg-img/13.jpg);"></li>
-</ol>
-</div>
-</section>
-
-
-<div class="contact-popup-form" id="contact-modal-lg">
-<div class="modal fade contact-modal-lg" tabindex="-1" role="dialog" aria-labelledby="contact-modal-lg" aria-hidden="true">
-<div class="modal-dialog modal-lg modal-dialog-centered">
-<div class="modal-content">
-<div class="container-fluid">
-<div class="row">
-<div class="col-12">
-<div class="contact-heading-text text-center mb-30">
-<span></span>
-<h2>Please get in touch</h2>
-</div>
-</div>
-</div>
-</div>
-
-<div class="contact-form-area">
-<div class="container-fluid">
-<form action="#" method="post">
-<div class="row">
-<div class="col-12 col-md-4">
-<input type="text" class="form-control" name="name" id="name" placeholder="Your Name">
-</div>
-<div class="col-12 col-md-4">
-<input type="email" class="form-control" name="email" id="email" placeholder="Your Email">
-</div>
-<div class="col-12 col-md-4">
-<input type="text" class="form-control" name="subject" id="subject" placeholder="Subject">
-</div>
-<div class="col-12">
-<textarea name="message" class="form-control" id="message" cols="30" rows="10" placeholder="Message"></textarea>
-</div>
-<div class="col-12 text-center">
-<button type="submit" class="btn studio-btn mt-3"><img src="img/core-img/logo-icon.png" alt=""> Send</button>
-</div>
-</div>
-</form>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-
-
-<p>Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com/" target="_blank">Colorlib</a></p>
-
-
-<script src="js/jquery/jquery-2.2.4.min.js"></script>
-
-<script src="js/popper.min.js"></script>
-
-<script src="js/bootstrap.min.js"></script>
-
-<script src="js/plugins.js"></script>
-
-<script src="js/active.js"></script>
-
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    document.getElementById('fechaEjecucion').valueAsDate = new Date();
 
-  gtag('config', 'UA-23581568-13');
+    function calcularDistribucion() {
+        const importeTotal = parseFloat(document.getElementById('importe').value) || 0;
+        const pLpg = parseFloat(document.getElementById('lpgPorcentaje').value) || 0;
+        const pLpv = parseFloat(document.getElementById('lpvPorcentaje').value) || 0;
+        const pLpe = parseFloat(document.getElementById('lpePorcentaje').value) || 0;
+
+        const mLpg = (importeTotal * pLpg) / 100;
+        const mLpv = (importeTotal * pLpv) / 100;
+        const mLpe = (importeTotal * pLpe) / 100;
+
+        document.getElementById('lpgMonto').value = mLpg.toFixed(2);
+        document.getElementById('lpvMonto').value = mLpv.toFixed(2);
+        document.getElementById('lpeMonto').value = mLpe.toFixed(2);
+
+        const totalPorcentaje = pLpg + pLpv + pLpe;
+        const totalMonto = mLpg + mLpv + mLpe;
+
+        const pctCell = document.getElementById('totalPorcentajeCell');
+        pctCell.innerText = totalPorcentaje.toFixed(2) + '%';
+        
+        if (totalPorcentaje === 100) {
+            pctCell.style.color = '#2ea44f';
+            document.getElementById('errorDistribucion').style.display = 'none';
+        } else {
+            pctCell.style.color = '#dc2626';
+        }
+        document.getElementById('totalMontoCell').innerText = 'S/. ' + totalMonto.toFixed(2);
+    }
+
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        const pLpg = parseFloat(document.getElementById('lpgPorcentaje').value) || 0;
+        const pLpv = parseFloat(document.getElementById('lpvPorcentaje').value) || 0;
+        const pLpe = parseFloat(document.getElementById('lpePorcentaje').value) || 0;
+        
+        if ((pLpg + pLpv + pLpe) !== 100) {
+            document.getElementById('errorDistribucion').style.display = 'block';
+            return false;
+        }
+
+        document.getElementById('successNotification').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => {
+            document.getElementById('successNotification').style.display = 'none';
+            limpiarFormulario();
+        }, 4000);
+    }
+
+    function limpiarFormulario() {
+        document.getElementById('ticketForm').reset();
+        document.getElementById('fechaEjecucion').valueAsDate = new Date();
+        document.getElementById('errorDistribucion').style.display = 'none';
+        document.getElementById('lpgMonto').value = "0.00";
+        document.getElementById('lpvMonto').value = "0.00";
+        document.getElementById('lpeMonto').value = "0.00";
+        document.getElementById('totalPorcentajeCell').innerText = "0%";
+        document.getElementById('totalMontoCell').innerText = "S/. 0.00";
+    }
 </script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vaafb692b2aea4879b33c060e79fe94621666317369993" integrity="sha512-0ahDYl866UMhKuYcW078ScMalXqtFJggm7TmlUtp0UlD4eQk0Ixfnm5ykXKvGJNFjLMoortdseTfsRT8oCfgGA==" data-cf-beacon='{"rayId":"79047a666f9877d9","token":"cd0b4b3a733644fc843ef0b185f98241","version":"2022.11.3","si":100}' crossorigin="anonymous"></script>
 </body>
-
-<!-- Mirrored from preview.colorlib.com/theme/studio/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 27 Jan 2023 21:11:08 GMT -->
 </html>
